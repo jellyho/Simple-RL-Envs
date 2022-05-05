@@ -101,7 +101,6 @@ class GridWorld:
 
     # 에이전트 움직이기
     next = [self.state[0],self.state[1]]
-    next += self.goal
     reward = 0
     done = False
 
@@ -120,6 +119,8 @@ class GridWorld:
       reward += self.unavailable_reward
 
     #보상, 완료 여부
+
+    next += [self.goal[0]-next[0], self.goal[1]-next[1]]
 
     if self.matrix[next[1]][next[0]] in self.act_to_str:
       reward += self.obstacle_reward
