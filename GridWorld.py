@@ -16,6 +16,7 @@ class GridWorld:
     self.goal_reward = 1
     self.alive_reward = -0.1
     self.unavailable_reward = -1
+    self.DELAY = 1
 
     if goal==None:
       self.goal = [self.width-1, self.height-1]
@@ -55,9 +56,9 @@ class GridWorld:
       print("|")
 
     print("-"+"-"*self.width*2+"-")
-    time.sleep(1)
+    time.sleep(self.DELAY)
 
-  def add_obstacles(self, posx, posy, dir, act="", include_state=True): # 정지:O 상:^ 하:v 좌:< 우:> #method: "reflect", ["O","^","v","<",">"]
+  def add_obstacles(self, posx, posy, dir, act="reflect", include_state=True): # 정지:O 상:^ 하:v 좌:< 우:> #method: "reflect", ["O","^","v","<",">"]
     self._obstacles.append([posx, posy, dir, act, include_state])
     self.state_size += 3 if include_state else 0
 
