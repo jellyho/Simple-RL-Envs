@@ -5,6 +5,10 @@ from google.colab import output
 from IPython.display import clear_output 
 import os
 
+"""
+version : 2
+"""
+
 class GridWorld:
   def __init__(self, width, height, state_mode="relative", relative_state_width=2, start=[0, 0], goal=None, start_method="left_top", goal_method="right_bottom", goal_included_in_state=True, dir_included_in_state=True):
     self.width = width
