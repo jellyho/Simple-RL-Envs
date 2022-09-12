@@ -1,13 +1,8 @@
 import numpy as np
 import random
 import time
-from google.colab import output
 from IPython.display import clear_output 
 import os
-
-"""
-version : 2
-"""
 
 class GridWorld:
   def __init__(self, width, height, state_mode="relative", relative_state_width=2, start=[0, 0], goal=None, start_method="left_top", goal_method="right_bottom", goal_included_in_state=True, dir_included_in_state=True):
@@ -15,11 +10,11 @@ class GridWorld:
     self.height = height
     self.action_size = 5
     self.state_size = 2
-    self.act_to_str = ["O","^","v","<",">"]
-    self.str_to_act = {"O":0, "^":1, "v":2, "<":3, ">":4}
+    self.act_to_str = ["○","△","▽","◁","▷"]
+    self.str_to_act = {"○":0, "△":1, "▽":2, "◁":3, "▷":4}
     self.state_mode = state_mode
 
-    self.matrix = [["#" for j in range(self.width)] for i in range(self.height)]
+    self.matrix = [["　" for j in range(self.width)] for i in range(self.height)]
     self.state = start
     self.pos = start
 
@@ -87,7 +82,7 @@ class GridWorld:
     self.reset_state()
 
   def refresh_matrix(self):
-    self.matrix = [["#" for j in range(self.width)] for i in range(self.height)]
+    self.matrix = [["　" for j in range(self.width)] for i in range(self.height)]
     for obs in self.obstacles:
       self.matrix[obs[1]][obs[0]] = self.act_to_str[obs[2]]
 
@@ -123,10 +118,7 @@ class GridWorld:
         elif x==self.goal[0] and y==self.goal[1] and self.giis:
           self.state[i] = 8
         elif self.matrix[y][x] in self.act_to_str:
-          if not self.diis:
-            self.state[i] = 7
-          else:
-            self.state[i] = self.str_to_act[self.matrix[y][x]]
+          self.state[i] = self.str_to_act[self.matrix[y][x]]
 
     self.state_size = len(self.state)
 
@@ -134,7 +126,7 @@ class GridWorld:
     if self.state_mode == "absolute":
       self.state = [self.pos[0], self.pos[1]]
     elif self.state_mode == "relative":
-      self.state = [0 for _ in range((self.relative_state_width*2+1)**2)]
+      self.state = [6 for _ in range((self.relative_state_width*2+1)**2)]
 
     if self.giis:
       self.state += [self.goal[0]-self.pos[0], self.goal[1]-self.pos[1]]
@@ -181,22 +173,22 @@ class GridWorld:
         print(f"[{state[-2]}, {state[-1]}]")
       print(f"reward:{reward}, action:{self.act_to_str[action]}")
 
-    print("-"+"-"*self.width*2+"-")
+    print("┌"+"─"*self.width+"┐")
 
     for l in range(self.height):
-      print("|", end="")
+      print("│", end="")
       for m in range(self.width):
         if self.pos[0] == m and self.pos[1] == l:
-          print("A", end=" ")
+          print("□", end="")
         elif self.goal[0] == m and self.goal[1] == l:
-          print("G", end=" ")
+          print("◆", end="")
         elif self.start[0] == m and self.start[1] == l:
-          print("S", end=" ")
+          print("◇", end="")
         else:
-          print(self.matrix[l][m], end=" ")
-      print("|")
+          print(self.matrix[l][m], end="")
+      print("│")
 
-    print("-"+"-"*self.width*2+"-")
+    print("└"+"─"*self.width+"┘")
     time.sleep(self.DELAY)
 
   def step(self, action, show=False):
@@ -204,13 +196,13 @@ class GridWorld:
       #좌표 업데이트
       if obs[2] == 0:
         pass
-      elif obs[2] == 1 and not obs[1] == 0:
+      elif obs[2] == 1 and ((not obs[1] == 0) and self.matrix[obs[1]-1][obs[0]]):
         obs[1] -= 1
-      elif obs[2] == 2 and not obs[1] == self.height-1:
+      elif obs[2] == 2 and ((not obs[1] == self.height-1) and self.matrix[obs[1]+1][obs[0]]):
         obs[1] += 1
-      elif obs[2] == 3 and not obs[0] == 0:
+      elif obs[2] == 3 and ((not obs[0] == 0) and self.matrix[obs[1]][obs[0]-1]):
         obs[0] -= 1
-      elif obs[2] == 4 and not obs[0] == self.width-1:
+      elif obs[2] == 4 and ((not obs[0] == self.width-1) and self.matrix[obs[1]][obs[0]+1]):
         obs[0] += 1
       else:
         pass
@@ -267,9 +259,11 @@ class GridWorld:
     reward += self.alive_reward
 
     self.pos = next_pos
+    
     self.refresh_state()
 
     if show:
       env.show(self.state, reward, action)
+
 
     return self.state, reward, done
