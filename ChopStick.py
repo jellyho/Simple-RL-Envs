@@ -123,7 +123,7 @@ class ChopStick:
     print("")
     print("")
     print("")
-    print(f"{self.code_to_str_2[self.matrix[2]]}  {self.code_to_str_2[self.matrix[3]]}")
+    print(f"{self.code_to_str_1[self.matrix[2]]}  {self.code_to_str_1[self.matrix[3]]}")
     print(" []    []  ")
     print("----------")
     time.sleep(self.DELAY)
