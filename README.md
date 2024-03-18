@@ -1,4 +1,4 @@
-# Python_RL_Envs
+# Simple RL Envs
 
 ## 1. 그리드월드
 
